@@ -206,6 +206,11 @@ apiRouter.post('/authenticate', function(req, res) {
           });
       });
 
+  //api endpoint to get user information
+  apiRouter.get('/me', function(req, res) {
+    res.send(req.decoded);
+  })
+
  // REGISTER OUR ROUTES -------------------------------
  // all of our routes will be prefixed with /api
  app.use('/api', apiRouter);
