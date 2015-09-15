@@ -8,6 +8,8 @@
  var morgan       = require('morgan'); // used to see requests
  var mongoose     = require('mongoose'); // for working w/ our database = process.env.PORT || 8080; // set the port for our app
  var port         = process.env.PORT || 8080;
+ var jwt          = require('jsonwebtoken');
+ var superSecret  = 'soleman';
 
 
 //source in models
@@ -44,15 +46,78 @@
  // get an instance of the express router
  var apiRouter = express.Router();
 
+//route for authenticating users
+apiRouter.post('/authenticate', function(req, res) {
+    //find the user
+    //select the name, username, and pw explicitly
+    User.findOne({
+      username: req.body.username
+    }).select('name username password').exec(function(err, user) {
+
+      if (err) throw err;
+
+      //no user with that username was found
+      if (!user) {
+        res.json({
+          success: false,
+          message: 'Authentication failed. User not found.'
+        });
+      } else if (user) {
+        //check to see if pw matchec
+        var validPassword = user.comparePassword(req.body.password);
+        if (!validPassword) {
+          res.json({
+            success: false,
+            message: 'Authentication failed. Wrong Password'
+          });
+        } else {
+          //if user is found & pw is right make token
+          var token = jwt.sign({
+            name: user.name,
+            usernme: user.username
+          }, superSecret, {
+            expiresInMinutes: 1440
+          });
+          //return info including json token
+          res.json({
+            success: true,
+            message: 'Enjoy your token!',
+            token: token
+          });
+        }
+      }
+  });
+});
 
  //middleware to use for all requests
  apiRouter.use(function(req, res, next) {
-      //do logging
-      console.log('Somebody just came to our API');
+      //checl header of url params or post params for token
+      var token = req.body.token || req.param('token') || req.headers['x-access-token'];
 
+      //decode token
+      if (token) {
+        //verifies secrets and checks exp
+        jwt.verify(token, superSecret, function(err, decoded) {
+          if (err) {
+            return res.status(403).send({
+              success: false,
+              message: 'Failed to auth token'
+            });
+          } else {
+            //if verified save to req for use in other routes
+            req.decoded = decoded;
+            next();
+          }
+        });
+      } else {
+        //if there is no token
+        return res.status(403).send({
+          success: false,
+          message: 'No token provided'
+        });
+      }
 
-      next();
- })
+ });
 
  // test route to make sure everything is working
  // accessed at GET http://localhost:8080/api
