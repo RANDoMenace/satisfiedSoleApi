@@ -46,48 +46,52 @@
  // get an instance of the express router
  var apiRouter = express.Router();
 
+ //instance of routes
+ var authRoutes = require('app/routes/authRoutes.js');
+ var userRoutes = require('app/routes/userRoutes.js');
+
 //route for authenticating users
-apiRouter.post('/authenticate', function(req, res) {
-    //find the user
-    //select the name, username, and pw explicitly
-    User.findOne({
-      username: req.body.username
-    }).select('name username password').exec(function(err, user) {
+// apiRouter.post('/authenticate', function(req, res) {
+//     //find the user
+//     //select the name, username, and pw explicitly
+//     User.findOne({
+//       username: req.body.username
+//     }).select('name username password').exec(function(err, user) {
 
-      if (err) throw err;
+//       if (err) throw err;
 
-      //no user with that username was found
-      if (!user) {
-        res.json({
-          success: false,
-          message: 'Authentication failed. User not found.'
-        });
-      } else if (user) {
-        //check to see if pw matchec
-        var validPassword = user.comparePassword(req.body.password);
-        if (!validPassword) {
-          res.json({
-            success: false,
-            message: 'Authentication failed. Wrong Password'
-          });
-        } else {
-          //if user is found & pw is right make token
-          var token = jwt.sign({
-            name: user.name,
-            usernme: user.username
-          }, superSecret, {
-            expiresInMinutes: 1440
-          });
-          //return info including json token
-          res.json({
-            success: true,
-            message: 'Enjoy your token!',
-            token: token
-          });
-        }
-      }
-  });
-});
+//       //no user with that username was found
+//       if (!user) {
+//         res.json({
+//           success: false,
+//           message: 'Authentication failed. User not found.'
+//         });
+//       } else if (user) {
+//         //check to see if pw matchec
+//         var validPassword = user.comparePassword(req.body.password);
+//         if (!validPassword) {
+//           res.json({
+//             success: false,
+//             message: 'Authentication failed. Wrong Password'
+//           });
+//         } else {
+//           //if user is found & pw is right make token
+//           var token = jwt.sign({
+//             name: user.name,
+//             usernme: user.username
+//           }, superSecret, {
+//             expiresInMinutes: 1440
+//           });
+//           //return info including json token
+//           res.json({
+//             success: true,
+//             message: 'Enjoy your token!',
+//             token: token
+//           });
+//         }
+//       }
+//   });
+// });
 
  //middleware to use for all requests
  apiRouter.use(function(req, res, next) {
@@ -126,94 +130,97 @@ apiRouter.post('/authenticate', function(req, res) {
  });
 
  // more routes for our API will happen here 47
- apiRouter.route('/users')
+ // apiRouter.route('/users')
 
-    //create a user
-    .post(function(req,res) {
-          //create a new instance of the user model
-          var user = new User();
+ //    //create a user
+ //    .post(function(req,res) {
+ //          //create a new instance of the user model
+ //          var user = new User();
 
-          //set the users information(comes from request)
-          user.name = req.body.name;
-          user.username = req.body.username;
-          user.password = req.body.password;
+ //          //set the users information(comes from request)
+ //          user.name = req.body.name;
+ //          user.username = req.body.username;
+ //          user.password = req.body.password;
 
-          //saves the user anc checks for errors
-          user.save(function(err) {
-            if (err) {
-              //du[licate entry
-              if (err.code == 11000)
-                  return res.json({ success: false, message: 'A user with that\
-                  username already exists. '});
-              else
-                  return res.send(err);
-                            }
+ //          //saves the user anc checks for errors
+ //          user.save(function(err) {
+ //            if (err) {
+ //              //du[licate entry
+ //              if (err.code == 11000)
+ //                  return res.json({ success: false, message: 'A user with that\
+ //                  username already exists. '});
+ //              else
+ //                  return res.send(err);
+ //                            }
 
-                    res.json({message: 'User created!'});
-        });
+ //                    res.json({message: 'User created!'});
+ //        });
 
-    })
+ //    })
 
-    //gets all users
-    .get(function(req, res) {
-        User.find(function(err, users) {
-            if (err) res.send(err);
+ //    //gets all users
+ //    .get(function(req, res) {
+ //        User.find(function(err, users) {
+ //            if (err) res.send(err);
 
-            //returns the users
-            res.json(users);
-        });
-    });
+ //            //returns the users
+ //            res.json(users);
+ //        });
+ //    });
 
-  apiRouter.route('/users/:user_id')
-      //get the user with that id
-      .get(function(req, res) {
-          User.findById(req.params.user_id, function(err, user) {
-              if (err) res.send(err);
+ //  apiRouter.route('/users/:user_id')
+ //      //get the user with that id
+ //      .get(function(req, res) {
+ //          User.findById(req.params.user_id, function(err, user) {
+ //              if (err) res.send(err);
 
-              //returns user
-              res.json(user);
-          });
-      })
+ //              //returns user
+ //              res.json(user);
+ //          });
+ //      })
 
-      .put(function(req, res) {
-          //uses model to find selected user
-          User.findById(req.params.user_id, function(err, user) {
-              if (err) res.send(err);
+ //      .put(function(req, res) {
+ //          //uses model to find selected user
+ //          User.findById(req.params.user_id, function(err, user) {
+ //              if (err) res.send(err);
 
-              //updates the users info only if its new
-              if (req.body.name) user.name = req.body.name;
-              if (req.body.username) user.username = req.body.username;
-              if (req.body.password) user.password = req.body.password;
+ //              //updates the users info only if its new
+ //              if (req.body.name) user.name = req.body.name;
+ //              if (req.body.username) user.username = req.body.username;
+ //              if (req.body.password) user.password = req.body.password;
 
-              //saves the user
-              user.save(function(err) {
-                if (err) res.send(err);
+ //              //saves the user
+ //              user.save(function(err) {
+ //                if (err) res.send(err);
 
-                //return a msg
-                res.json({ message: 'User updated'});
-              });
-          });
-      })
+ //                //return a msg
+ //                res.json({ message: 'User updated'});
+ //              });
+ //          });
+ //      })
 
-      //deletes the user with this id
-      .delete(function(req, res) {
-          User.remove({
-              _id: req.params.user_id
-          }, function(err, user) {
-                if (err) res.send(err);
+ //      //deletes the user with this id
+ //      .delete(function(req, res) {
+ //          User.remove({
+ //              _id: req.params.user_id
+ //          }, function(err, user) {
+ //                if (err) res.send(err);
 
-                res.json({ message: 'Successfully deleted'});
-          });
-      });
+ //                res.json({ message: 'Successfully deleted'});
+ //          });
+ //      });
 
-  //api endpoint to get user information
-  apiRouter.get('/me', function(req, res) {
-    res.send(req.decoded);
-  })
+ //  //api endpoint to get user information
+ //  apiRouter.get('/me', function(req, res) {
+ //    res.send(req.decoded);
+ //  })
 
  // REGISTER OUR ROUTES -------------------------------
  // all of our routes will be prefixed with /api
- app.use('/api', apiRouter);
+ // app.use('/api', apiRouter);
+ // app.use('/', basicRoutes);
+ app.use('/authenticate', authRoutes);
+ app.use('/users', userRoutes);
 
 
 
