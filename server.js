@@ -15,6 +15,10 @@
 //source in models
  var User         = require('./app/models/user');
 
+ //instance of routes
+ var authRoutes = require('./app/routes/authRoutes.js');
+ var userRoutes = require('./app/routes/userRoutes.js');
+
 
   // connect to our database (hosted on modulus.io)
   mongoose.connect('mongodb://node:noder@novus.modulusmongo.net:27017/Iganiq8o');
@@ -35,6 +39,9 @@
 
  // log all requests to the console
  app.use(morgan('dev'))
+
+ app.use('/authenticate', authRoutes);
+ app.use('/users', userRoutes);
  // ROUTES FOR OUR API
  // =============================
 
@@ -46,9 +53,6 @@
  // get an instance of the express router
  var apiRouter = express.Router();
 
- //instance of routes
- var authRoutes = require('app/routes/authRoutes.js');
- var userRoutes = require('app/routes/userRoutes.js');
 
 //route for authenticating users
 // apiRouter.post('/authenticate', function(req, res) {
@@ -94,34 +98,34 @@
 // });
 
  //middleware to use for all requests
- apiRouter.use(function(req, res, next) {
-      //checl header of url params or post params for token
-      var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+ // apiRouter.use(function(req, res, next) {
+ //      //checl header of url params or post params for token
+ //      var token = req.body.token || req.param('token') || req.headers['x-access-token'];
 
-      //decode token
-      if (token) {
-        //verifies secrets and checks exp
-        jwt.verify(token, superSecret, function(err, decoded) {
-          if (err) {
-            return res.status(403).send({
-              success: false,
-              message: 'Failed to auth token'
-            });
-          } else {
-            //if verified save to req for use in other routes
-            req.decoded = decoded;
-            next();
-          }
-        });
-      } else {
-        //if there is no token
-        return res.status(403).send({
-          success: false,
-          message: 'No token provided'
-        });
-      }
+ //      //decode token
+ //      if (token) {
+ //        //verifies secrets and checks exp
+ //        jwt.verify(token, superSecret, function(err, decoded) {
+ //          if (err) {
+ //            return res.status(403).send({
+ //              success: false,
+ //              message: 'Failed to auth token'
+ //            });
+ //          } else {
+ //            //if verified save to req for use in other routes
+ //            req.decoded = decoded;
+ //            next();
+ //          }
+ //        });
+ //      } else {
+ //        //if there is no token
+ //        return res.status(403).send({
+ //          success: false,
+ //          message: 'No token provided'
+ //        });
+ //      }
 
- });
+ // });
 
  // test route to make sure everything is working
  // accessed at GET http://localhost:8080/api
@@ -219,8 +223,7 @@
  // all of our routes will be prefixed with /api
  // app.use('/api', apiRouter);
  // app.use('/', basicRoutes);
- app.use('/authenticate', authRoutes);
- app.use('/users', userRoutes);
+
 
 
 
