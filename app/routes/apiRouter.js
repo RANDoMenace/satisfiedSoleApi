@@ -3,6 +3,7 @@ var app = require('express'),
     UsersCtrl = require('../users/userController'),
     VendorsCtrl = require('../vendors/vendorController'),
     ChatCtrl = require('../chat/chats.controller')
+    ShoesCtrl = require('../shoes/shoesController')
 
 
 
@@ -13,6 +14,13 @@ router.get('/', function(req, res, next) {
 });
 
 // CRUD Routes
+
+// Shoes CRUD
+router.get('/api/shoes',                                      ShoesCtrl.shoesAll);
+router.post('/api/shoes',                                   ShoesCtrl.shoeCreate);
+router.get('/api/shoes/:shoe_id',                           ShoesCtrl.shoeShow);
+router.put('/api/shoes/:shoe_id',                           ShoesCtrl.shoeUpdate);
+router.delete('/api/shoes/:shoe_id',                        ShoesCtrl.shoeDelete);
 
 // Users CRUD
 router.post('/api/login',                                   UsersCtrl.userAuth);

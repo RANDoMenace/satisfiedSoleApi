@@ -2,13 +2,21 @@ var mongoose     = require('mongoose'),
     Schema       = mongoose.Schema,
     bcrypt       = require('bcrypt-nodejs');
 
+var Shoe         = require("./shoeModel"),
+
+
 // User Schema
 var UserSchema   = new Schema({
   name: { type: String, required: true },
   username: { type: String, required: true, index: { unique: true }},
   password: { type: String, required: true, select: false },
   zip: { type: String, required: true },
-  picture: { type: String, required: true }
+  picture: { type: String, required: true },
+    shoes: [{
+        type:  mongoose.Schema.Types.ObjectId,
+        ref:   'Shoe'
+  }]
+
 });
 
 
