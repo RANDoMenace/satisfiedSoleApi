@@ -2,7 +2,7 @@ var app = require('express'),
     router = app.Router(),
     UsersCtrl = require('../users/userController'),
     VendorsCtrl = require('../vendors/vendorController'),
-    ChatCtrl = require('../chat/chats.controller')
+    ChatCtrl = require('../chat/chatsController')
     ShoesCtrl = require('../shoes/shoesController')
 
 

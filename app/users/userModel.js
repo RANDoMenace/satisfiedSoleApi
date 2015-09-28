@@ -1,8 +1,7 @@
 var mongoose     = require('mongoose'),
     Schema       = mongoose.Schema,
-    bcrypt       = require('bcrypt-nodejs');
-
-var Shoe         = require("./shoeModel"),
+    bcrypt       = require('bcrypt-nodejs'),
+    Shoe         = require("../shoes/shoeModel");
 
 
 // User Schema

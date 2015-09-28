@@ -1,6 +1,6 @@
 'use strict';
 
-var Shoe = require("./shoeModel"),
+var Shoe = require("./shoeModel");
 
 
 // creates a shoe

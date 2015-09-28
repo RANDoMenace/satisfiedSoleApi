@@ -1,7 +1,6 @@
 var mongoose     = require('mongoose'),
     Schema       = mongoose.Schema,
-
-var User         = require("./userModel"),
+    User         = require("../users/userModel");
 
 
 // Shoe Schema
