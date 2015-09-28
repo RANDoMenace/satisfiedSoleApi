@@ -12,7 +12,7 @@ var express      = require('express'),
 // Connect DB
 mongoose.connect(config.databaseURI);
 
-// View ENgine Set-up
+// View Engine Set-up
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
