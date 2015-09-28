@@ -22,7 +22,7 @@ router.get('/api/shoes/:shoe_id',                           ShoesCtrl.shoeShow);
 router.put('/api/shoes/:shoe_id',                           ShoesCtrl.shoeUpdate);
 router.delete('/api/shoes/:shoe_id',                        ShoesCtrl.shoeDelete);
 
-// Users CRUD
+// Users CRUDs
 router.post('/api/login',                                   UsersCtrl.userAuth);
 router.get('/api/users',                                    UsersCtrl.usersAll);
 router.post('/api/users',                                   UsersCtrl.userCreate);
@@ -40,10 +40,10 @@ router.delete('/api/vendors/:vendor_id',    VendorsCtrl.tokenVerify, VendorsCtrl
 
 
 
-// CHAT CRUD
-router.get('/api/games/:game_id/chats/:chat_id',    UsersCtrl.tokenVerify, ChatCtrl.chatShow);
-router.post('/api/games/:game_id/chats',            UsersCtrl.tokenVerify, ChatCtrl.chatCreate);
-router.put('/api/games/:game_id/chats/:chat_id',    UsersCtrl.tokenVerify, ChatCtrl.chatUpdate);
-router.delete('/api/games/:game_id/chats/:chat_id', UsersCtrl.tokenVerify, ChatCtrl.chatDelete);
+// // CHAT CRUD
+// router.get('/api/games/:game_id/chats/:chat_id',    UsersCtrl.tokenVerify, ChatCtrl.chatShow);
+// router.post('/api/games/:game_id/chats',            UsersCtrl.tokenVerify, ChatCtrl.chatCreate);
+// router.put('/api/games/:game_id/chats/:chat_id',    UsersCtrl.tokenVerify, ChatCtrl.chatUpdate);
+// router.delete('/api/games/:game_id/chats/:chat_id', UsersCtrl.tokenVerify, ChatCtrl.chatDelete);
 
 module.exports = router;

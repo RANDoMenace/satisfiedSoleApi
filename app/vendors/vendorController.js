@@ -134,7 +134,7 @@ var vendorsAll = function(req, res) {
         if (err) res.send(err);
 
         // return the users
-        res.json(users);
+        res.json(vendors);
   });
 }
 
